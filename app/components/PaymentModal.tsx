@@ -46,16 +46,10 @@ export default function PaymentModal({ plan, onClose }: PaymentModalProps) {
         throw new Error(data.error || 'Erro ao processar pagamento')
       }
 
-      // Sucesso! Redirecionar para WhatsApp
+      // SUCESSO! Redirecionar para WhatsApp
       if (data.whatsappUrl) {
-        // Abrir WhatsApp em nova aba
-        window.open(data.whatsappUrl, '_blank')
-        
-        // Mostrar mensagem de sucesso
-        alert('✅ Assinatura criada com sucesso!\n\nVocê será redirecionado para o WhatsApp com o link de pagamento!')
-        
-        // Fechar modal
-        onClose()
+        // Usamos window.location.href para evitar que o navegador bloqueie o pop-up
+        window.location.href = data.whatsappUrl
       } else {
         alert('✅ Assinatura criada com sucesso!\n\nEm breve você receberá os detalhes por email!')
         onClose()
@@ -166,45 +160,4 @@ export default function PaymentModal({ plan, onClose }: PaymentModalProps) {
             <select
               value={formData.billingType}
               onChange={(e) => setFormData({ ...formData, billingType: e.target.value })}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
-            >
-              <option value="CREDIT_CARD">💳 Cartão de Crédito</option>
-              <option value="PIX">📱 PIX</option>
-              <option value="BOLETO">🧾 Boleto</option>
-            </select>
-          </div>
-
-          {/* Aviso */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <p className="text-sm text-blue-800">
-              {formData.billingType === 'CREDIT_CARD' 
-                ? '✅ Pagamento recorrente automático. A renovação acontece todo mês sem você precisar fazer nada!'
-                : '📲 Você receberá o link de pagamento via WhatsApp após finalizar!'}
-            </p>
-          </div>
-
-          {/* Botão Submit */}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-gradient-to-r from-red-600 to-red-700 text-white py-4 rounded-lg font-bold hover:from-red-700 hover:to-red-800 disabled:opacity-50 disabled:cursor-not-allowed transition flex items-center justify-center gap-2"
-          >
-            {loading ? (
-              <>
-                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                Processando...
-              </>
-            ) : (
-              'Finalizar Assinatura'
-            )}
-          </button>
-
-          {/* Info WhatsApp */}
-          <p className="text-center text-sm text-gray-500">
-            💬 Você será redirecionado para o WhatsApp
-          </p>
-        </form>
-      </div>
-    </div>
-  )
-}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus
